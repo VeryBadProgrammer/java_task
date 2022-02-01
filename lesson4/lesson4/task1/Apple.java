@@ -18,24 +18,24 @@ public class Apple extends Fruit {
         }
     }
 
-    final String color;
+    final Color color;
 
     public Apple() {
         this.color = switch (new Random().nextInt(3)) {
-            case 0 -> RED.getName();
-            case 1 -> GREEN.getName();
-            default -> YELLOW.getName();
+            case 0 -> RED;
+            case 1 -> GREEN;
+            default -> YELLOW;
         };
     }
 
     public Apple(Color color) {
-        this.color = color.name;
+        this.color = color;
     }
 
     @Override
     public String toString() {
         return "Apple{" +
-                "color='" + color + '\'' +
+                "color='" + color.getName() + '\'' +
                 ", weight=" + getWeight() +
                 '}';
     }
