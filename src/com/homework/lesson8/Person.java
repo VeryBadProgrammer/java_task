@@ -3,13 +3,45 @@ package com.homework.lesson8;
 
 public class Person {
     @JsonName("name")
-    String firstName = "Vasya";
+    private String firstName = "Vasya";
 
     @JsonName("years")
-    double age = 12;
+    private double age = 12;
 
     @JsonIgnore
-    String password;
+    private String password;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public double getAge() {
+        return age;
+    }
+
+    public void setAge(double age) {
+        this.age = age;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Person() {
+    }
+
+    public Person(String firstName, double age) {
+        this.firstName = firstName;
+        this.age = age;
+    }
 
     @Override
     public String toString() {
