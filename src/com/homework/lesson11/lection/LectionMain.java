@@ -1,5 +1,6 @@
 package com.homework.lesson11.lection;
 
+import javax.swing.text.html.parser.Entity;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
@@ -46,40 +47,53 @@ import java.util.stream.Stream;
 public class LectionMain {
     public static void main(String[] args) {
         List<Student> students = createStudents();
-//        System.out.println("Выведите список студентов, которые хоть раз посещали матанализ.");
-//        students.stream().filter(x->x.getLectionSet().stream().anyMatch(l->l.getName().equals("матанализ"))).forEach(System.out::println);
-//        System.out.println("Выведите статистику посещений для каждого студентам в формате: имя - количество посщенных лекций.");
-//        students.stream().forEach(x -> System.out.println(x.getName() + " - " + x.getLectionSet().size()));
+        System.out.println("Выведите список студентов, которые хоть раз посещали матанализ.");
+        students.stream().filter(x->x.getLectionSet().stream().anyMatch(l->l.getName().equals("матанализ"))).forEach(System.out::println);
+
+        System.out.println("Выведите статистику посещений для каждого студентам в формате: имя - количество посщенных лекций.");
+        students.stream().forEach(x -> System.out.println(x.getName() + " - " + x.getLectionSet().size()));
+
         System.out.println("Выведите название дисциплин, имеющих наибольшее количество посещений.");
         Map<String, Long> mapCountLection = students.stream()
                 .map(Student::getLectionSet)
                 .flatMap(x -> x.stream())
                 .collect(Collectors.groupingBy(x -> x.getName(), Collectors.counting()));
+        Long max = mapCountLection.values().stream().max(Comparator.comparingLong(Object::hashCode)).get();
+        mapCountLection.keySet().stream().filter(x -> mapCountLection.get(x) == max).forEach(System.out::println);
+
         System.out.println("Выведите имена студентов, которые посетили наибольшее количество лекций в день.");
-//        students.stream()
-//                .flatMap(Stream.of(y->y.getName(), x->x.getLectionSet().stream()))
-//                .map()
-//                .collect(Collectors.groupingBy(x -> x.(), Collectors.counting()));
+        Map<String, Long> studentWithCount = students.stream().collect(Collectors.toMap(x -> x.getName(),
+                x -> x.getLectionSet().stream()
+                        .collect(Collectors.groupingBy(l -> l.getDate(), Collectors.counting()))
+                        .values().stream().max(Long::compare).get()));
+        Long max1 = studentWithCount.values().stream().max(Long::compare).get();
+        studentWithCount.keySet().stream().filter(x -> studentWithCount.get(x) == max1).forEach(System.out::println);
+
+        System.out.println("Выведите статистику по курсам в формате:");
+        System.out.println("название курсов - количество разных студентов, которые посетили хотя бы одно занятие. (т.е. в лучше случае это будет 10)");
+        Map<String, Long> lections = students.stream()
+                .flatMap(x -> x.getLectionSet().stream())
+                .collect(Collectors.groupingBy(x->x.getName(), Collectors.counting()));
+        System.out.println(lections);
     }
 
     public static List<Student> createStudents() {
-
         List<Student> students = new ArrayList<>();
         Lection lection1 = new Lection("матанализ", LocalDate.of(2020, Month.APRIL, 1));
         Lection lection2 = new Lection("философия", LocalDate.of(2020, Month.MARCH, 15));
         Lection lection3 = new Lection("английкий язык", LocalDate.of(2021, Month.AUGUST, 20));
         Lection lection4 = new Lection("история", LocalDate.of(2020, Month.APRIL, 1));
         Lection lection5 = new Lection("физкультура", LocalDate.of(2020, Month.APRIL, 28));
-        students.add(new Student("1", Set.of(lection1, lection3)));
-        students.add(new Student("2", Set.of(lection4, lection3)));
-        students.add(new Student("3", Set.of(lection5)));
-        students.add(new Student("4", Set.of(lection1, lection2)));
-        students.add(new Student("5", Set.of(lection3, lection4, lection5)));
-        students.add(new Student("6", Set.of(lection5, lection3)));
-        students.add(new Student("7", Set.of(lection1, lection2, lection5)));
-        students.add(new Student("8", Set.of(lection3, lection1)));
-        students.add(new Student("9", Set.of(lection1)));
-        students.add(new Student("10", Set.of(lection1, lection2)));
+        students.add(new Student("name1", Set.of(lection1, lection3)));
+        students.add(new Student("name2", Set.of(lection4, lection3)));
+        students.add(new Student("name3", Set.of(lection5)));
+        students.add(new Student("name4", Set.of(lection1, lection2)));
+        students.add(new Student("name5", Set.of(lection1, lection4, lection5)));
+        students.add(new Student("name6", Set.of(lection5, lection3)));
+        students.add(new Student("name7", Set.of(lection1, lection2, lection5)));
+        students.add(new Student("name8", Set.of(lection3, lection1)));
+        students.add(new Student("name9", Set.of(lection1)));
+        students.add(new Student("name10", Set.of(lection1, lection2)));
 
         return students;
     }
